@@ -1,0 +1,15 @@
+﻿@model System.Collections.Generic.List<WhoChat.Models.Message>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>Messages</h2>
+@foreach (var item in Model)
+{
+    <div>
+        <p>@item.From.UserName</p>
+        <p>@item.MsgText</p>
+        <p>@item.DateCreated</p>
+    </div>
+}
+
