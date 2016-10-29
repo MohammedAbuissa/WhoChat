@@ -18,6 +18,7 @@ namespace WhoChat.Controllers
 
         public ManageController()
         {
+            
         }
 
         public ManageController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
@@ -42,6 +43,7 @@ namespace WhoChat.Controllers
         {
             get
             {
+                
                 return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
             }
             private set
