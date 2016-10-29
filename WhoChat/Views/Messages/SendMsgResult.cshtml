@@ -1,0 +1,7 @@
+﻿@model WhoChat.Controllers.MessagesController.OperationResult
+@{
+    ViewBag.Title = "SendMsgResult";
+}
+
+<h2>@(Model == WhoChat.Controllers.MessagesController.OperationResult.Success? "Sent Successfully": "Failed To Send")</h2>
+

@@ -1,0 +1,14 @@
+﻿@model WhoChat.Models.ViewModels.Messages.SubmitMsgVM
+@{
+    ViewBag.Title = "New";
+}
+
+<h2>New Message</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <p> To: @Html.TextBoxFor(x => x.ToEmail)</p>
+    <p> Msg: @Html.TextBoxFor(x => x.MsgText)</p>
+    <input type="submit" value="Send" />
+}
+
