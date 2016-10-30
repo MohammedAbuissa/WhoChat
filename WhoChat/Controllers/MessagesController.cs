@@ -77,7 +77,9 @@ namespace WhoChat.Controllers
                 var Msg = new Message();
                 Msg.From = currentUser;
                 Msg.DateCreated = DateTime.Now;
-                Msg.To = UserManager.FindById(SubmitMsg.ToEmail);
+                var targetUser = UserManager.FindByEmail(SubmitMsg.ToEmail);
+                if (targetUser == null) return View("SendMsgResult", OperationResult.Fail);
+                Msg.To = targetUser;
                 Msg.MsgText = SubmitMsg.MsgText;
                 DbContext.Messages.Add(Msg);
                 DbContext.SaveChanges();
