@@ -24,12 +24,21 @@ namespace WhoChat.Controllers
             DbContext = new ApplicationDbContext();
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));
         }
-        // GET: Messages
-        public async Task<ActionResult> List()
+        // GET: All Threads of Your Messages
+        public async Task<ActionResult> ListThreads()
         {
-            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());           
-            List<Message> messages = DbContext.Messages.Where(x => x.To.Id == currentUser.Id).OrderByDescending(x => x.DateCreated).ToList();
+            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            //get the count of messages that sent to currentUser and aren't read yet.
+            var messages = DbContext.Messages.Where(x => x.To.Id == currentUser.Id && !x.IsRead)
+                .OrderByDescending(x => x.DateCreated)
+                .GroupBy(x => x.From.UserName)
+                .ToDictionary(key => key.Key, value => value.Count());
             return View(messages);
+        }
+
+        public async Task<ActionResult> List(string Email)
+        {
+            return View();
         }
 
         //GET: New Message Form
@@ -37,10 +46,14 @@ namespace WhoChat.Controllers
         {
             return View();
         }
+
+        //ToDo: New Message
         public enum OperationResult
         {
             Success, Fail
         }
+
+        //POST: send Message to someone
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> New(SubmitMsgVM SubmitMsg)

@@ -1,0 +1,13 @@
+﻿@model System.Collections.Generic.Dictionary<string, int>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>Messages</h2>
+@foreach (var item in Model.Keys)
+{
+    <div>
+        <a href="./List/@item">@item | @Model[item]</a>
+    </div>
+}
+
