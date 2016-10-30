@@ -1,0 +1,13 @@
+﻿@model System.Collections.Generic.Dictionary<WhoChat.Models.ApplicationUser, int>
+@{
+    ViewBag.Title = "List";
+}
+
+<h2>Messages</h2>
+@foreach (var item in Model.Keys)
+{
+    <div>
+        <a href="./Threads/@item.Id">@item.Email | @Model[item]</a>
+    </div>
+}
+

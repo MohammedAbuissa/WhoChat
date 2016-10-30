@@ -10,7 +10,6 @@ namespace WhoChat.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
-            ContextKey = "WhoChat.Models.ApplicationDbContext";
         }
 
         protected override void Seed(WhoChat.Models.ApplicationDbContext context)

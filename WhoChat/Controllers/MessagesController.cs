@@ -25,20 +25,33 @@ namespace WhoChat.Controllers
             UserManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(DbContext));
         }
         // GET: All Threads of Your Messages
-        public async Task<ActionResult> ListThreads()
+        public ActionResult Threads(string Id)
         {
-            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
-            //get the count of messages that sent to currentUser and aren't read yet.
-            var messages = DbContext.Messages.Where(x => x.To.Id == currentUser.Id && !x.IsRead)
-                .OrderByDescending(x => x.DateCreated)
-                .GroupBy(x => x.From.UserName)
-                .ToDictionary(key => key.Key, value => value.Count());
-            return View(messages);
-        }
-
-        public async Task<ActionResult> List(string Email)
-        {
-            return View();
+            if(Id == null)
+            {
+                var currentUser = UserManager.FindById(User.Identity.GetUserId());
+                //get the count of messages that sent to currentUser and aren't read yet.
+                var messages = DbContext.Messages.Where(x => x.To.Id == currentUser.Id && !x.IsRead)
+                    .OrderByDescending(x => x.DateCreated)
+                    .GroupBy(x => x.From)
+                    .ToDictionary(key => key.Key, value => value.Count());
+                return View("Threads", messages);
+            }
+            else 
+            {
+                var currentUser = UserManager.FindById(User.Identity.GetUserId());
+                var threadUser = UserManager.FindById(Id);
+                //if(threadUser == null)
+                //    return View("Error", "Error Msg");
+                var messages = DbContext.Messages.Where(x => (x.To.Id == currentUser.Id && x.From.Id == threadUser.Id) || (x.To.Id == threadUser.Id && x.From.Id == currentUser.Id))
+                    .OrderBy(x => x.DateCreated);
+                var messageBubbles = new List<MessageBubble>();
+                foreach (var item in messages)
+                {
+                    messageBubbles.Add(new MessageBubble { Me = item.From.Id == currentUser.Id, Msg = item });
+                }
+                return View("Thread", messageBubbles);   
+            }
         }
 
         //GET: New Message Form
@@ -56,15 +69,15 @@ namespace WhoChat.Controllers
         //POST: send Message to someone
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> New(SubmitMsgVM SubmitMsg)
+        public ActionResult New(SubmitMsgVM SubmitMsg)
         {
-            var currentUser = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
             if(ModelState.IsValid)
             {
                 var Msg = new Message();
                 Msg.From = currentUser;
                 Msg.DateCreated = DateTime.Now;
-                Msg.To = await UserManager.FindByEmailAsync(SubmitMsg.ToEmail);
+                Msg.To = UserManager.FindById(SubmitMsg.ToEmail);
                 Msg.MsgText = SubmitMsg.MsgText;
                 DbContext.Messages.Add(Msg);
                 DbContext.SaveChanges();

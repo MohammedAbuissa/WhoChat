@@ -1,0 +1,25 @@
+﻿@model System.Collections.Generic.List<WhoChat.Models.ViewModels.Messages.MessageBubble>
+@{
+    ViewBag.Title = "Thread";
+}
+
+<h2>Messages</h2>
+<div>
+    @foreach (var item in Model)
+    {
+        if (item.Me)
+        {
+            <div style="background:yellow">
+                @item.Msg.MsgText | @item.Msg.DateCreated
+            </div>
+        }
+        else
+        {
+            <div style="background:orange">
+                @item.Msg.MsgText | @item.Msg.DateCreated
+            </div>
+        }
+
+    }
+</div>
+
