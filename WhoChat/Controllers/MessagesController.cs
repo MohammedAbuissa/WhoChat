@@ -81,7 +81,7 @@ namespace WhoChat.Controllers
 
             #region SaveCryptoSettings
             var record = DbContext.CryptoSettingsList.Where(x => x.User.Id == currentUser.Id).ToList();
-            if(record == null)
+            if(record.Count == 0)
             {
                 DbContext.CryptoSettingsList.Add(new CryptoSettings { IV = iV, Key = key, User = currentUser });
             }

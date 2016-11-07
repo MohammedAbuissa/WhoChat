@@ -240,6 +240,10 @@
     <Compile Include="Migrations\201611051758346_AddCryptoSettings.Designer.cs">
       <DependentUpon>201611051758346_AddCryptoSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611070459580_AddEncryption.cs" />
+    <Compile Include="Migrations\201611070459580_AddEncryption.Designer.cs">
+      <DependentUpon>201611070459580_AddEncryption.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CryptoSettings.cs" />
@@ -344,6 +348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611051758346_AddCryptoSettings.resx">
       <DependentUpon>201611051758346_AddCryptoSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611070459580_AddEncryption.resx">
+      <DependentUpon>201611070459580_AddEncryption.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
