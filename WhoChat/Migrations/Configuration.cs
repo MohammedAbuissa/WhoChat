@@ -9,7 +9,7 @@ namespace WhoChat.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
         }
 
         protected override void Seed(WhoChat.Models.ApplicationDbContext context)

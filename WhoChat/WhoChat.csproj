@@ -215,6 +215,8 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
+    <Compile Include="Cryptography\DES_CBC.cs" />
+    <Compile Include="Cryptography\ICBCCrypto.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -234,8 +236,13 @@
     <Compile Include="Migrations\201610291301458_AddIsReadToMessage.Designer.cs">
       <DependentUpon>201610291301458_AddIsReadToMessage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611051758346_AddCryptoSettings.cs" />
+    <Compile Include="Migrations\201611051758346_AddCryptoSettings.Designer.cs">
+      <DependentUpon>201611051758346_AddCryptoSettings.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CryptoSettings.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Message.cs" />
@@ -273,6 +280,7 @@
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Scripts\DES.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -333,6 +341,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610291301458_AddIsReadToMessage.resx">
       <DependentUpon>201610291301458_AddIsReadToMessage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611051758346_AddCryptoSettings.resx">
+      <DependentUpon>201611051758346_AddCryptoSettings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

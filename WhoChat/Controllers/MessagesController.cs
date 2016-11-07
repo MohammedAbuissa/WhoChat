@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using WhoChat.Models;
@@ -9,6 +10,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using System.Security.Cryptography;
 using WhoChat.Models.ViewModels.Messages;
 
 namespace WhoChat.Controllers
@@ -57,7 +59,40 @@ namespace WhoChat.Controllers
         //GET: New Message Form
         public ActionResult New()
         {
-            return View();
+            #region GettingCurrentUser
+            var currentUser = UserManager.FindById(User.Identity.GetUserId());
+            #endregion
+
+            #region GeneratingCryptoSettings
+            Random r = new Random((int)DateTime.Now.Ticks);
+
+            var key = new byte[8];
+            key = key.Select(x => (byte)r.Next(65 ,91)).ToArray();
+            string sKey = Encoding.ASCII.GetString(key);
+
+            var iV = new byte[8];
+            iV = iV.Select(x => (byte)r.Next(97, 123)).ToArray();
+            string sIV = Encoding.ASCII.GetString(iV);
+
+            var submitMsg = new SubmitMsgVM();
+            submitMsg.Key = sKey;
+            submitMsg.IV = sIV;
+            #endregion
+
+            #region SaveCryptoSettings
+            var record = DbContext.CryptoSettingsList.Where(x => x.User.Id == currentUser.Id).ToList();
+            if(record == null)
+            {
+                DbContext.CryptoSettingsList.Add(new CryptoSettings { IV = iV, Key = key, User = currentUser });
+            }
+            else
+            {
+                record[0].IV = iV;
+                record[0].Key = key;
+            }
+            DbContext.SaveChanges();
+            #endregion
+            return View(submitMsg);
         }
 
         //ToDo: New Message
@@ -71,9 +106,18 @@ namespace WhoChat.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult New(SubmitMsgVM SubmitMsg)
         {
+            #region GettingCurrentUser
             var currentUser = UserManager.FindById(User.Identity.GetUserId());
-            if(ModelState.IsValid)
+            #endregion
+
+            #region DecryptMsg
+            var record = DbContext.CryptoSettingsList.Where(x => x.User.Id == currentUser.Id).ToList();
+            SubmitMsg.MsgText = MvcApplication.CBCCrypto.Decrypt(SubmitMsg.MsgText, Encoding.ASCII.GetString(record[0].Key), record[0].IV);
+            #endregion
+
+            if (ModelState.IsValid)
             {
+                #region SaveMsg
                 var Msg = new Message();
                 Msg.From = currentUser;
                 Msg.DateCreated = DateTime.Now;
@@ -83,6 +127,7 @@ namespace WhoChat.Controllers
                 Msg.MsgText = SubmitMsg.MsgText;
                 DbContext.Messages.Add(Msg);
                 DbContext.SaveChanges();
+                #endregion
                 return View("SendMsgResult", OperationResult.Success);
             }
             else

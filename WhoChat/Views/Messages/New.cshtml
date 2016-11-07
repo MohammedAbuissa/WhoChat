@@ -2,13 +2,27 @@
 @{
     ViewBag.Title = "New";
 }
-
+<script src="~/Scripts/DES.js" type="text/javascript"></script>
 <h2>New Message</h2>
+<p> Msg: <input type="text" onkeyup="Transform(this)"/></p>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     <p> To: @Html.TextBoxFor(x => x.ToEmail)</p>
-    <p> Msg: @Html.TextBoxFor(x => x.MsgText)</p>
+    <p><input type="text" id="MsgText" name="MsgText" hidden /></p>
     <input type="submit" value="Send" />
 }
-
+<script>
+    var kkk = "@Model.Key";
+    var IIIVVV = "@Model.IV";
+    console.log("key: " + kkk);
+    console.log("Key length: "+ kkk.length);
+    console.log("IV: " + IIIVVV);
+    console.log("IV length: " + IIIVVV.length);
+    var Transform = function(TB)
+    {
+        var l = "";
+        l = stringToHex(des("@Model.Key" ,TB.value, true, 1, "@Model.IV" , 0))
+        document.getElementById("MsgText").value = l;
+    }
+</script>
